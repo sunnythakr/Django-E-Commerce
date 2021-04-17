@@ -93,4 +93,18 @@ from .forms import CustomerProfileForm
 class ProfileView(View):
     def get(self, request):
         form = CustomerProfileForm()
-        return render(request, 'app/profile.html',{'form':form})
+        return render(request, 'app/profile.html',{'form':form,'active':'btn-primary'})
+
+    def post(self,request):
+        form = CustomerProfileForm(request.POST)
+        if form.is_valid():
+            usr = request.user
+            name = form.cleaned_data['name']
+            locality = form.cleaned_data['locality']
+            city = form.cleaned_data['city']
+            state = form.cleaned_data['state']
+            zipcode = form.cleaned_data['zipcode']
+            reg = Customer(user=usr, name=name,locality=locality,city=city,state=state, zipcode=zipcode)
+            reg.save()
+            messages.success(request,'Congratulations profile updated Successfully')
+        return render(request,'app/profile.html',{'form':'form', 'active':'btn-primary'})
