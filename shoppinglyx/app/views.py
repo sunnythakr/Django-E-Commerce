@@ -88,3 +88,9 @@ class CustomerRegistrationView(View):
 
 def checkout(request):
  return render(request, 'app/checkout.html')
+
+from .forms import CustomerProfileForm
+class ProfileView(View):
+    def get(self, request):
+        form = CustomerProfileForm()
+        return render(request, 'app/profile.html',{'form':form})
