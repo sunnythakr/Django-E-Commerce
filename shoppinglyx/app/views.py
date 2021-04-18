@@ -37,8 +37,10 @@ def buy_now(request):
 def profile(request):
  return render(request, 'app/profile.html')
 
-def address(request):
- return render(request, 'app/address.html')
+def address(request): 
+    add = Customer.objects.filter(user=request.user)
+    return render(request, 'app/address.html',{'add':add,'active':'btn-primary'})    
+
 
 def orders(request):
  return render(request, 'app/orders.html')
@@ -105,7 +107,6 @@ class ProfileView(View):
             state = form.cleaned_data['state']
             zipcode = form.cleaned_data['zipcode']
             reg = Customer(user=usr, name=name,locality=locality,city=city,state=state, zipcode=zipcode)
-            messages.success(request,'Congratulations profile updated Successfully')
             reg.save()
-            
+            messages.success(request,'Congratulations profile updated Successfully') 
         return render(request,'app/profile.html',{'form':'form', 'active':'btn-primary'})
