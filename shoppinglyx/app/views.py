@@ -63,6 +63,8 @@ def show_cart(request):
 
 
 
+
+
 def buy_now(request):
  return render(request, 'app/buynow.html')
 
