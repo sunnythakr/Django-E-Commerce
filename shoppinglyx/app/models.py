@@ -21,8 +21,8 @@ class Customer(models.Model):
     zipcode = models.IntegerField()
     state = models.CharField(choices=STATE_CHOICE, max_length=100)
 
-    def __str__(self):
-        return str(self.id)
+def __str__(self):
+    return str(self.id)
 
 CATEGORY_CHOICES = (
     ('M','Mobile'),
@@ -50,8 +50,12 @@ class Cart(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
 
-    def __str__(self):
-        return str(self.id)
+def __str__(self):
+    return str(self.id)
+
+@property
+def total_cost(self):
+    return self.quantity * self.product.discount_price
 
 
 STATUS_CHOICES = (

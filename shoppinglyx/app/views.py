@@ -207,6 +207,16 @@ def checkout(request):
             totalamount = amount + shipping_amount
     return render(request, 'app/checkout.html',{'add':add, 'totalamount':totalamount,'cart_items':cart_items})
 
+def payment_done(request):
+    user = request.user
+    custid = request.GET.get('custid')
+    customer = Customer.objects.get(id=custid)
+    cart = Cart.objects.filter(user=user)
+    for c in cart:
+        OrderPlaced(user=user, customer=customer, product=c.product, quantity=c.quantity).save()
+        c.delete()
+    return redirect("orders")
+
 
 
 

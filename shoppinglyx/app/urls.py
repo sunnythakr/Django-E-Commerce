@@ -38,6 +38,10 @@ urlpatterns = [
     path('mobile/', views.mobile, name='mobile'),
     path('mobile/<slug:data>', views.mobile, name='mobiledata'),
 
+    path('checkout/', views.checkout, name='checkout'),
+    path('paymentdone/', views.payment_done, name='paymentdone'),
+
+
     path('accounts/login/', auth_view.LoginView.as_view(template_name='app/login.html', authentication_form=LoginForm), name='login'),
     path('logout/', auth_view.LogoutView.as_view(next_page='login'), name='logout'),
  
@@ -47,5 +51,5 @@ urlpatterns = [
 
     path('registration/', views.CustomerRegistrationView.as_view(), name='customerregistration'),
 
-    path('checkout/', views.checkout, name='checkout'),
+    
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
