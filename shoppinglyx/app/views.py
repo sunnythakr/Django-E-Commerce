@@ -3,7 +3,8 @@ from django.views import View
 from .models import Customer, Product, Cart, OrderPlaced
 from .forms import CustomerRegistrationForm
 from django.contrib import messages
-
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 
 
 
@@ -29,6 +30,7 @@ class ProductDetailView(View):
         return render(request, 'app/productdetail.html',{'product':product})
 
 
+@login_required
 def add_to_cart(request):
     user = request.user
     product_id = request.GET.get('prod_id')
@@ -86,6 +88,7 @@ def minus_cart(request):
             }
         return JsonResponse(data)
 
+@login_required
 def remove_cart(request):
     if request.method=="GET":
         prod_id = request.GET['prod_id']
@@ -108,7 +111,7 @@ def remove_cart(request):
 
 
 
-
+@login_required
 def show_cart(request):
     if request.user.is_authenticated:
         user = request.user
@@ -141,13 +144,12 @@ def buy_now(request):
 def profile(request):
  return render(request, 'app/profile.html')
 
+@login_required
 def address(request): 
     add = Customer.objects.filter(user=request.user)
     return render(request, 'app/address.html',{'add':add,'active':'btn-primary'})    
 
 
-def orders(request):
- return render(request, 'app/orders.html')
 
 # def change_password(request):
 #  return render(request, 'app/changepassword.html')
@@ -174,6 +176,7 @@ def mobile(request, data=None):
 
 # def customerregistration(request):
 #  return render(request, 'app/customerregistration.html')
+
 class CustomerRegistrationView(View):
     def get(self, request):
         form = CustomerRegistrationForm
@@ -191,7 +194,7 @@ class CustomerRegistrationView(View):
 
 
 
-
+@login_required
 def checkout(request):
     user = request.user
     add = Customer.objects.filter(user=user)
@@ -207,6 +210,7 @@ def checkout(request):
             totalamount = amount + shipping_amount
     return render(request, 'app/checkout.html',{'add':add, 'totalamount':totalamount,'cart_items':cart_items})
 
+@login_required
 def payment_done(request):
     user = request.user
     custid = request.GET.get('custid')
@@ -218,10 +222,16 @@ def payment_done(request):
     return redirect("orders")
 
 
+@login_required
+def orders(request):
+    op = OrderPlaced.objects.filter(user=request.user)
+    return render(request, 'app/orders.html',{'order_placed':op})
+
 
 
 
 from .forms import CustomerProfileForm
+@method_decorator(login_required, name='dispatch')
 class ProfileView(View):
     def get(self, request):
         form = CustomerProfileForm()
